@@ -1,0 +1,15 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.busyorc.tenshis_jei.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "CraftingTermSlotBatchMixin",
+    "BookmarkAutoCraftingBridgeExactCraftingMixin",
+    "BookmarkAutoCraftingTaskDispatchExactMixin",
+    "RecipeChainMathInputLogMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

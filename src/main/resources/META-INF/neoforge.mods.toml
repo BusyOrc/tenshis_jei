@@ -1,0 +1,47 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MIT"
+
+[[mods]]
+modId = "tenshis_jei"
+version = "1.0.0"
+displayName = "Tenshi's JEI"
+authors = "busyorc"
+description = '''Hinanawi Tenshi's mod that adds some mod integrations for JEIU.'''
+
+# ---- Prerequisites ----
+[[dependencies.tenshis_jei]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tenshis_jei]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.1,1.22)"
+ordering = "NONE"
+side = "BOTH"
+
+# Just Enough Items: unofficial fork (StardustMINUS-01), mod id is still "jei"
+# 当前所需版本: fork 的 spec 版本为 19.44.0 (分支 1.21.1)
+[[dependencies.tenshis_jei]]
+modId = "jei"
+type = "required"
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+# Extended Terminal (mc-myo-s-mod) 1.21.1 branch, mod id "extendedterminal"
+# 当前所需版本: 19.0.4 (分支 1.21.1)
+[[dependencies.tenshis_jei]]
+modId = "extendedterminal"
+type = "required"
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+# ---- Mixins (registered like the fork's jei-ae2.mixins.json) ----
+[[mixins]]
+config = "tenshis_jei.mixins.json"

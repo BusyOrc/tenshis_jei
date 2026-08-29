@@ -1,0 +1,51 @@
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+    id 'net.neoforged.moddev' version '2.0.82'
+}
+
+version = mod_version
+group = mod_group_id
+
+base {
+    archivesName = "${mod_id}-${minecraft_version}"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+neoForge {
+    // NeoForge 21.1 (Minecraft 1.21.1)
+    version = project.neo_version
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+            programArgument '--nogui'
+        }
+        data {
+            data()
+            programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
+        }
+    }
+
+    mods {
+        "${mod_id}" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+dependencies {
+    // 编译期参照 jar（不打包进本模组；运行期由 run/mods 中的同名 jar 提供）：
+    //  - JEI unofficial fork：compat 注册表接口（mezz.jei.common / mezz.jei.gui / mezz.jei.neoforge）
+    //  - ExtendedTerminal：ETTerminalMenu / ETMenuType 等终端 API
+    //  - Applied Energistics 2：CraftingTermSlot / MEStorageMenu 基类与 appeng 网络 API
+    compileOnly files(
+        'run/mods/JEIunofficial-1.21.1-neoforge-19.44.0.403.jar',
+        'run/mods/ExtendedTerminal-1.21.1-19.1.0.jar',
+        'run/mods/appliedenergistics2-19.2.17.jar'
+    )
+}

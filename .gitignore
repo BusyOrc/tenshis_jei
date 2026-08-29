@@ -1,0 +1,20 @@
+# gradle
+.gradle/
+build/
+# ide
+.idea/
+out/
+*.iml
+# eclipse
+.classpath
+.project
+.settings/
+bin/
+# run data
+run/
+logs/
+# os
+Thumbs.db
+.DS_Store
+# misc
+local.properties
