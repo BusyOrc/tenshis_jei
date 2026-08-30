@@ -50,6 +50,7 @@ NeoForge 1.21.1 的 JEI 分支增强模组，基于 JEIunofficial(fork) 19.44.0.
 
 `mixin/`
 - `BookmarkInputHandlerTinkersShiftFMixin.java` — 挂 fork 的 `BookmarkInputHandler.handleUserInput` HEAD：**只做 shift+F 匠魂建树**；V/shift+V 拉取完全交回 fork（不拦截、不自定义规划）。
+- `BookmarkOverlayScrollStepAreaShiftMixin.java` — 挂 `BookmarkOverlay.calculateScrollStepArea` HEAD：把底部步数量输入栏位（ScrollStepTextField 区域）**右移 20px**（复刻原公式 + 20，右边界锚定所以宽度减 20px）。
 - `CraftingTermSlotBatchMixin.java / BookmarkAutoCraftingBridgeExactCraftingMixin / BookmarkAutoCraftingTaskDispatchExactMixin / RecipeChainMathInputLogMixin` — 既有 ET/合成 mixin
 
 ### 2.2 可选前置判定（重要）
