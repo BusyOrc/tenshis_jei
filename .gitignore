@@ -18,3 +18,5 @@ Thumbs.db
 .DS_Store
 # misc
 local.properties
+# local dependency copies (unused; real deps live in run/mods)
+libs/
