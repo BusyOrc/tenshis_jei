@@ -42,6 +42,22 @@ versionRange = "[1,)"
 ordering = "NONE"
 side = "BOTH"
 
+
+# Tinkers' Construct (fork by zhuchuovo): optional — powers the bookmark shift+F modifier-recipe feature
+[[dependencies.tenshis_jei]]
+modId = "tconstruct"
+type = "optional"
+versionRange = "[3.12.6,)"
+ordering = "NONE"
+side = "BOTH"
+
+# Mantle (required by tconstruct, listed as optional here since tconstruct is optional)
+[[dependencies.tenshis_jei]]
+modId = "mantle"
+type = "optional"
+versionRange = "[1.12.5,)"
+ordering = "NONE"
+side = "BOTH"
 # ---- Mixins (registered like the fork's jei-ae2.mixins.json) ----
 [[mixins]]
 config = "tenshis_jei.mixins.json"

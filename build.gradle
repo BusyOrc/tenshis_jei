@@ -46,6 +46,18 @@ dependencies {
     compileOnly files(
         'run/mods/JEIunofficial-1.21.1-neoforge-19.44.0.403.jar',
         'run/mods/ExtendedTerminal-1.21.1-19.1.0.jar',
-        'run/mods/appliedenergistics2-19.2.17.jar'
+        'run/mods/appliedenergistics2-19.2.17.jar',
+        // 可选前置：匠魂 3 移植版 + Mantle（运行期缺省时本模组功能自动降级）
+        'run/mods/TinkersConstruct-1.21.1-3.12.7.jar',
+        'run/mods/Mantle-1.21.1-1.12.5.jar',
+        // 可选前置：Curios（饰品槽无线终端检测，缺省时仅扫背包槽位）
+        'run/mods/curios-neoforge-9.5.1+1.21.1.jar',
+        // 无线终端定位/连接走 ExtendedAE_Plus 的 API（EAEP 及其前置已由用户放入 run/mods）
+        'run/mods/extendedae_plus-1.6.2.jar',
+        'run/mods/ExtendedAE-1.21-2.2.35-neoforge.jar',
+        'run/mods/architectury-13.0.11-neoforge.jar',
+        'run/mods/cloth-config-15.0.140-neoforge.jar',
+        'run/mods/Glodium-1.21-2.2-neoforge.jar',
+        'run/mods/ae2wtlib-19.5.1.jar'
     )
 }

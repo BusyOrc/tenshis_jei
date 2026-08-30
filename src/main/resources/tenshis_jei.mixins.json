@@ -7,7 +7,8 @@
     "CraftingTermSlotBatchMixin",
     "BookmarkAutoCraftingBridgeExactCraftingMixin",
     "BookmarkAutoCraftingTaskDispatchExactMixin",
-    "RecipeChainMathInputLogMixin"
+    "RecipeChainMathInputLogMixin",
+    "BookmarkInputHandlerTinkersShiftFMixin"
   ],
   "injectors": {
     "defaultRequire": 1

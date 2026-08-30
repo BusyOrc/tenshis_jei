@@ -1,7 +1,9 @@
 package com.busyorc.tenshis_jei;
 
+import com.busyorc.tenshis_jei.compat.ae2.WirelessBookmarkPullTransferHandler;
 import com.busyorc.tenshis_jei.compat.et.EtTerminalCraftingGridCraftExecutor;
 import mezz.jei.common.bookmarks.CraftingGridCraftExecutors;
+import mezz.jei.common.bookmarks.ServerBookmarkPullTransfers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
@@ -27,6 +29,34 @@ public class TenshisJei {
         modContainer.registerConfig(ModConfig.Type.COMMON, TenshisJeiConfig.SPEC, TenshisJei.MOD_ID + ".toml");
         // 注册"在 ET 终端内按配方树自动合成"的服务端执行器到 JEI fork 的注册表。
         CraftingGridCraftExecutors.registerExecutor(new EtTerminalCraftingGridCraftExecutor());
-        TenshisJeiLog.info("Registered ExtendedTerminal terminal crafting-grid executor for JEI (unofficial).");
+        // V/shift+V 拉取配方树物品时，若有 AE2 无线终端在身（背包或 Curios 饰品槽），
+        // 可不打开 ME 终端直接从网络拉取。
+        ServerBookmarkPullTransfers.registerHandler(new WirelessBookmarkPullTransferHandler());
+        // 注册 Curios 槽位定位器（可选前置；未加载 Curios 时注册本身无害）
+        try {
+            appeng.menu.locator.MenuLocators.register(
+                com.busyorc.tenshis_jei.compat.curios.CuriosItemLocator.class,
+                com.busyorc.tenshis_jei.compat.curios.CuriosItemLocator::writeToPacket,
+                com.busyorc.tenshis_jei.compat.curios.CuriosItemLocator::readFromPacket
+            );
+        } catch (RuntimeException e) {
+            TenshisJeiLog.info("CuriosItemLocator registration failed: " + e);
+        }
+        // 客户端：把"无线终端已连网络"注册为 JEI fork 的外部存储快照提供器，
+        // V/shift+V 拉取完全走 fork 自己的 handleBookmarkPull（规划/发包/服务端抽取）。
+        if (net.neoforged.fml.loading.FMLLoader.getDist().isClient()) {
+            try {
+                mezz.jei.gui.bookmarks.chain.BookmarkExternalStorageSnapshots.registerProvider(
+                    new com.busyorc.tenshis_jei.compat.ae2.WirelessExternalStorageSnapshotProvider()
+                );
+                TenshisJeiLog.info("Registered wireless external-storage snapshot provider for JEI bookmark pull.");
+            } catch (RuntimeException e) {
+                TenshisJeiLog.info("Wireless snapshot provider registration failed: " + e);
+            }
+        }
+        // 无线网络快照同步：客户端定时请求服务端枚举（仅客户端有意义，注册无害）
+        modEventBus.addListener(com.busyorc.tenshis_jei.network.WirelessPayloadRegistrar::registerPayloads);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(com.busyorc.tenshis_jei.network.WirelessPayloadRegistrar::onClientTick);
+        TenshisJeiLog.info("Registered ExtendedTerminal crafting executor + AE2 wireless bookmark pull handler for JEI (unofficial).");
     }
 }
