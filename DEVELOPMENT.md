@@ -1,4 +1,4 @@
-# Tenshi's JEI（tenshis_jei）开发文档
+# Tenshi's JEI Addon（tenshis_jei_addon）开发文档
 
 NeoForge 1.21.1 的 JEI 分支增强模组，基于 JEIunofficial(fork) 19.44.0.403（mod id `jei`）。
 本模组不改 fork 本体，全部通过 mixin + 服务端处理器注册 + 网络 payload 同步 + 可选前置桥接实现。
@@ -32,10 +32,10 @@ NeoForge 1.21.1 的 JEI 分支增强模组，基于 JEIunofficial(fork) 19.44.0.
   - `MenuLocators.register(CuriosItemLocator.class, ...)`（Curios 定位器，供 AE2 菜单宿主解析）
   - 客户端（dist 守卫）`BookmarkExternalStorageSnapshots.registerProvider(new WirelessExternalStorageSnapshotProvider())`
   - 网络 payload（`RegisterPayloadHandlersEvent`）+ 客户端 tick 刷新（`NeoForge.EVENT_BUS`）
-- `TenshisJeiLog.java` — 统一日志（日志前缀 `[Tenshi's JEI/]`，调试行 `[ET-jei] ...`）
+- `TenshisJeiLog.java` — 统一日志（日志前缀 `[Tenshi's JEI Addon/]`，调试行 `[ET-jei] ...`）
 - `TenshisJeiConfig.java / RecipeTreeCraftingMode.java / TenshisJeiCraftingModes.java` — 既有配置与合成模式
 
-`network/` — 无线网络快照同步（自定义 payload，通道 `tenshis_jei`）
+`network/` — 无线网络快照同步（自定义 payload，通道 `tenshis_jei_addon`）
 - `WirelessSnapshotRequestPayload`（C2S，空）— 客户端请求服务端枚举网络
 - `WirelessSnapshotDataPayload`（S2C，`List<Entry(ItemStack, long)>`）— 服务端回传网络物品（代表栈 count=1 + 可用量）
 - `WirelessSnapshotPayloadHandler` — 服务端：EAEP 定位+枚举（`Bridge.readNetworkEntries`）回包；客户端：写缓存
@@ -118,7 +118,7 @@ NeoForge 1.21.1 的 JEI 分支增强模组，基于 JEIunofficial(fork) 19.44.0.
 5. **蓝色框架（组面板槽）V 拉取**：fork 的 `getPullGroupIdUnderMouse` 本就覆盖组面板槽，无需额外处理。
 6. **freeSlots 门**：fork 规划在 `freeSlots <= 0` 时直接给空计划（背包满时"无物可拉"是预期行为，不是 bug）。
 
-### 4.2 服务端日志（调试用，`[Tenshi's JEI/]` 前缀）
+### 4.2 服务端日志（调试用，`[Tenshi's JEI Addon/]` 前缀）
 
 - `pull-srv: handler entered, targets=..., menu=..., containerId=...` — 处理器被调用
 - `pull-srv: EAEP find -> ... / getConnectedGrid -> ... / extract ... -> extracted N / moved = N` — EAEP 路径每步
@@ -147,7 +147,7 @@ V/shift+V (fork handleBookmarkPull)
   curios、extendedae_plus + ae2wtlib + ExtendedAE + architectury + cloth-config + Glodium
 - 构建：`gradle build`；开发运行：`gradle runClient`（约 2 分钟到主菜单）；
   日志：`run/logs/latest.log`（调试行 `[ET-jei] ...`）
-- 发布 jar：`build/libs/tenshis_jei-1.21.1-1.0.0.jar`（compileOnly，不带依赖）
+- 发布 jar：`build/libs/tenshis_jei_addon-1.21.1-1.0.0.jar`（compileOnly，不带依赖）
 
 ---
 

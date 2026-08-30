@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 public record WirelessSnapshotRequestPayload() implements CustomPacketPayload {
 
     public static final Type<WirelessSnapshotRequestPayload> TYPE =
-        new Type<>(ResourceLocation.fromNamespaceAndPath("tenshis_jei", "wireless_snapshot_request"));
+        new Type<>(ResourceLocation.fromNamespaceAndPath("tenshis_jei_addon", "wireless_snapshot_request"));
 
     public static final StreamCodec<ByteBuf, WirelessSnapshotRequestPayload> STREAM_CODEC =
         StreamCodec.unit(new WirelessSnapshotRequestPayload());

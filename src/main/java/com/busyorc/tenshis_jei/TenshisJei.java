@@ -10,7 +10,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.ModContainer;
 
 /**
- * Tenshi's JEI — 基础模组（已加入 ExtendedTerminal 终端 × JEI(unofficial fork) 自动合成兼容）。
+ * Tenshi's JEI Addon — 基础模组（已加入 ExtendedTerminal 终端 × JEI(unofficial fork) 自动合成兼容）。
  * 前置 = JEI（unofficial fork，mod id "jei"）+ Extended Terminal（mod id "extendedterminal"），
  * 见 resources/META-INF/neoforge.mods.toml。
  * <p>
@@ -20,12 +20,12 @@ import net.neoforged.fml.ModContainer;
 @Mod(TenshisJei.MOD_ID)
 public class TenshisJei {
 
-    public static final String MOD_ID = "tenshis_jei";
-    public static final String MOD_NAME = "Tenshi's JEI";
+    public static final String MOD_ID = "tenshis_jei_addon";
+    public static final String MOD_NAME = "Tenshi's JEI Addon";
     public static final String VERSION = "1.0.0";
 
     public TenshisJei(IEventBus modEventBus, ModContainer modContainer) {
-        // Config file: config/tenshis_jei.toml (debug switch, default off; filename = mod id).
+        // Config file: config/tenshis_jei_addon.toml (debug switch, default off; filename = mod id).
         modContainer.registerConfig(ModConfig.Type.COMMON, TenshisJeiConfig.SPEC, TenshisJei.MOD_ID + ".toml");
         // 注册"在 ET 终端内按配方树自动合成"的服务端执行器到 JEI fork 的注册表。
         CraftingGridCraftExecutors.registerExecutor(new EtTerminalCraftingGridCraftExecutor());

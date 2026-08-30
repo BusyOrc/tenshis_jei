@@ -3,21 +3,21 @@ loaderVersion = "[4,)"
 license = "MIT"
 
 [[mods]]
-modId = "tenshis_jei"
+modId = "tenshis_jei_addon"
 version = "1.0.0"
-displayName = "Tenshi's JEI"
+displayName = "Tenshi's JEI Addon"
 authors = "busyorc"
 description = '''Hinanawi Tenshi's mod that adds some mod integrations for JEIU.'''
 
 # ---- Prerequisites ----
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "neoforge"
 type = "required"
 versionRange = "[21,)"
 ordering = "NONE"
 side = "BOTH"
 
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "minecraft"
 type = "required"
 versionRange = "[1.21.1,1.22)"
@@ -26,7 +26,7 @@ side = "BOTH"
 
 # Just Enough Items: unofficial fork (StardustMINUS-01), mod id is still "jei"
 # 当前所需版本: fork 的 spec 版本为 19.44.0 (分支 1.21.1)
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "jei"
 type = "required"
 versionRange = "[1,)"
@@ -35,7 +35,7 @@ side = "BOTH"
 
 # Extended Terminal (mc-myo-s-mod) 1.21.1 branch, mod id "extendedterminal"
 # 当前所需版本: 19.0.4 (分支 1.21.1)
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "extendedterminal"
 type = "required"
 versionRange = "[1,)"
@@ -44,7 +44,7 @@ side = "BOTH"
 
 
 # Tinkers' Construct (fork by zhuchuovo): optional — powers the bookmark shift+F modifier-recipe feature
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "tconstruct"
 type = "optional"
 versionRange = "[3.12.6,)"
@@ -52,7 +52,7 @@ ordering = "NONE"
 side = "BOTH"
 
 # Mantle (required by tconstruct, listed as optional here since tconstruct is optional)
-[[dependencies.tenshis_jei]]
+[[dependencies.tenshis_jei_addon]]
 modId = "mantle"
 type = "optional"
 versionRange = "[1.12.5,)"
@@ -60,4 +60,4 @@ ordering = "NONE"
 side = "BOTH"
 # ---- Mixins (registered like the fork's jei-ae2.mixins.json) ----
 [[mixins]]
-config = "tenshis_jei.mixins.json"
+config = "tenshis_jei_addon.mixins.json"

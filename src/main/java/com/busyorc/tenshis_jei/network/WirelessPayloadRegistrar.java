@@ -14,7 +14,7 @@ public final class WirelessPayloadRegistrar {
     }
 
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("tenshis_jei");
+        PayloadRegistrar registrar = event.registrar("tenshis_jei_addon");
         registrar.playToServer(WirelessSnapshotRequestPayload.TYPE, WirelessSnapshotRequestPayload.STREAM_CODEC, WirelessSnapshotPayloadHandler::handleServer);
         registrar.playToClient(WirelessSnapshotDataPayload.TYPE, WirelessSnapshotDataPayload.STREAM_CODEC, WirelessSnapshotPayloadHandler::handleClient);
     }

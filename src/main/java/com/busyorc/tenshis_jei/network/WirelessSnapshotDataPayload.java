@@ -13,7 +13,7 @@ import java.util.List;
 public record WirelessSnapshotDataPayload(List<Entry> entries) implements CustomPacketPayload {
 
     public static final Type<WirelessSnapshotDataPayload> TYPE =
-        new Type<>(ResourceLocation.fromNamespaceAndPath("tenshis_jei", "wireless_snapshot_data"));
+        new Type<>(ResourceLocation.fromNamespaceAndPath("tenshis_jei_addon", "wireless_snapshot_data"));
 
     public record Entry(ItemStack stack, long amount) {
     }

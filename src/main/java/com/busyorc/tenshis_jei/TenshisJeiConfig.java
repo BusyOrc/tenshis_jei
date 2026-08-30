@@ -3,7 +3,7 @@ package com.busyorc.tenshis_jei;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 /**
- * Configuration for Tenshi's JEI; saved as config/tenshis_jei.toml.
+ * Configuration for Tenshi's JEI Addon; saved as config/tenshis_jei_addon.toml.
  */
 public final class TenshisJeiConfig {
     public static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();

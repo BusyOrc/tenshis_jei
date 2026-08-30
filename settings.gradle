@@ -6,4 +6,4 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'tenshis_jei'
+rootProject.name = 'tenshis_jei_addon'
