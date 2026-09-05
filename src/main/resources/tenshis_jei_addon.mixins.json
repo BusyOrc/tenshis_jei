@@ -9,7 +9,8 @@
     "BookmarkAutoCraftingTaskDispatchExactMixin",
     "RecipeChainMathInputLogMixin",
     "BookmarkInputHandlerTinkersShiftFMixin",
-    "BookmarkOverlayScrollStepAreaShiftMixin"
+    "BookmarkOverlayScrollStepAreaShiftMixin",
+    "BookmarkPullPlannerAutoCraftMixin"
   ],
   "injectors": {
     "defaultRequire": 1

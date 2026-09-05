@@ -49,6 +49,14 @@ public final class EaepCompatBridge {
         return EaepCompatImpl.getConnectedGrid(player);
     }
 
+    /** 服务端触发自动合成：EAEP 定位+连接，逐个下发给网格合成服务；未加载/无连接静默。 */
+    public static void autoCraft(ServerPlayer player, List<com.busyorc.tenshis_jei.network.WirelessSnapshotDataPayload.Entry> entries) {
+        if (!isExtendedAEPlusLoaded()) {
+            return;
+        }
+        EaepCompatImpl.autoCraft(player, entries);
+    }
+
     /** 用 EAEP 的定位+连接逻辑从 ME 网络拉取，返回实际取到的数量；未加载/无连接/取不到返回 empty。 */
     public static OptionalInt pull(ServerPlayer player, AbstractContainerMenu menu, int containerId, Container playerInventory, List<BookmarkPullTarget> targets) {
         if (!isExtendedAEPlusLoaded()) {

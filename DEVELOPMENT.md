@@ -160,3 +160,14 @@ V/shift+V (fork handleBookmarkPull)
 - `ae2wtlib` 的 fork mixin ClassNotFound 警告无害（未装时 fork 自动跳过）
 - Curios tag 缺引用警告（数据包引用缺失物品）无害
 - 既有: ET 终端提供器修复、批处理 mixin、链数学日志 mixin（未在本文展开）
+
+---
+
+## 9. 拉取不足自动合成（V/shift+V，v1.0.2）
+- 客户端 mixin `BookmarkPullPlannerAutoCraftMixin` 注入 `BookmarkPullPlanner.plan` RETURN：
+  用 fork 公开的 `RecipeChainMath.refresh` 取完整需求，缺口 = required - available（`matchesCraftingAvailable` 宽松匹配快照），
+  经 C2S `CraftRequestPayload` 发服务端。
+- 服务端 `EaepCompatImpl.autoCraft` -> EAEP 定位 + `grid.getCraftingService()`，逐个 `beginCraftingCalculation` + `submitJob`。
+- 关键坑：simRequester 须返回 `grid.getPivot()`（否则拿不到库存、plan.simulation()==true）；
+  勿在主线程 `job.get()` 阻塞（后台线程等结果 + 主线程 submitJob）；无样板物品先 `isCraftable` 跳过。
+- 1.21.1 用 `ItemStack.parseOptional(registryAccess, tag)` 重建代表栈（无 `ItemStack.of`）。

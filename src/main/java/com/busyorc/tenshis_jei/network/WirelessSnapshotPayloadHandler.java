@@ -32,6 +32,18 @@ public final class WirelessSnapshotPayloadHandler {
         });
     }
 
+    public static void handleCraftRequest(CraftRequestPayload payload, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            try {
+                if (!(context.player() instanceof ServerPlayer player)) {
+                    return;
+                }
+                com.busyorc.tenshis_jei.compat.eaep.EaepCompatBridge.autoCraft(player, payload.entries());
+            } catch (Throwable ignored) {
+            }
+        });
+    }
+
     public static void handleClient(WirelessSnapshotDataPayload payload, IPayloadContext context) {
         context.enqueueWork(() -> WirelessSnapshotCache.update(payload.entries()));
     }

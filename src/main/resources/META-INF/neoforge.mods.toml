@@ -4,7 +4,7 @@ license = "MIT"
 
 [[mods]]
 modId = "tenshis_jei_addon"
-version = "1.0.0"
+version = "1.0.2"
 displayName = "Tenshi's JEI Addon"
 authors = "busyorc"
 description = '''Hinanawi Tenshi's mod that adds some mod integrations for JEIU.'''

@@ -16,7 +16,20 @@ public final class WirelessPayloadRegistrar {
     public static void registerPayloads(RegisterPayloadHandlersEvent event) {
         PayloadRegistrar registrar = event.registrar("tenshis_jei_addon");
         registrar.playToServer(WirelessSnapshotRequestPayload.TYPE, WirelessSnapshotRequestPayload.STREAM_CODEC, WirelessSnapshotPayloadHandler::handleServer);
+        registrar.playToServer(CraftRequestPayload.TYPE, CraftRequestPayload.STREAM_CODEC, WirelessSnapshotPayloadHandler::handleCraftRequest);
         registrar.playToClient(WirelessSnapshotDataPayload.TYPE, WirelessSnapshotDataPayload.STREAM_CODEC, WirelessSnapshotPayloadHandler::handleClient);
+    }
+
+    /** 客户端：请求服务端自动合成这些物品（由拉取缺口 mixin 调用）。 */
+    public static void sendCraftRequest(java.util.List<WirelessSnapshotDataPayload.Entry> entries) {
+        try {
+            Minecraft minecraft = Minecraft.getInstance();
+            LocalPlayer player = minecraft.player;
+            if (player != null && player.connection != null) {
+                player.connection.send(new CraftRequestPayload(entries));
+            }
+        } catch (Throwable ignored) {
+        }
     }
 
     private static int tickCounter = 0;

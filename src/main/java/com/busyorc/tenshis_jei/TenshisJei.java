@@ -22,7 +22,7 @@ public class TenshisJei {
 
     public static final String MOD_ID = "tenshis_jei_addon";
     public static final String MOD_NAME = "Tenshi's JEI Addon";
-    public static final String VERSION = "1.0.0";
+    public static final String VERSION = "1.0.2";
 
     public TenshisJei(IEventBus modEventBus, ModContainer modContainer) {
         // Config file: config/tenshis_jei_addon.toml (debug switch, default off; filename = mod id).
