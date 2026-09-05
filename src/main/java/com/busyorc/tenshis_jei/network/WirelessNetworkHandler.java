@@ -49,6 +49,11 @@ public final class WirelessNetworkHandler {
             SnapshotDataPacket::decode,
             WirelessNetworkHandler::handleData
         );
+        CHANNEL.registerMessage(2, CraftRequestPacket.class,
+            CraftRequestPacket::encode,
+            CraftRequestPacket::decode,
+            WirelessNetworkHandler::handleCraftRequest
+        );
     }
 
     /** Server side: client asked for the wireless network contents -> reply to that player. */
@@ -69,6 +74,26 @@ public final class WirelessNetworkHandler {
         NetworkEvent.Context context = ctx.get();
         context.enqueueWork(() -> WirelessSnapshotCache.update(msg.entries()));
         context.setPacketHandled(true);
+    }
+
+    /** Server side: client asked to auto-craft the given items (EAEP locates + grid + submit). */
+    private static void handleCraftRequest(CraftRequestPacket msg, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            ServerPlayer player = context.getSender();
+            if (player != null) {
+                EaepCompatBridge.autoCraft(player, msg.entries());
+            }
+        });
+        context.setPacketHandled(true);
+    }
+
+    /** Client: ask the server to auto-craft these items (used by the pull-shortfall mixin). */
+    public static void sendCraftRequest(List<SnapshotDataPacket.Entry> entries) {
+        try {
+            CHANNEL.sendToServer(new CraftRequestPacket(entries));
+        } catch (Throwable ignored) {
+        }
     }
 
     /** Client: periodic refresh request while a screen is open. */

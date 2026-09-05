@@ -35,3 +35,16 @@
   生产 SRG 运行时这些 mod 均正常，与 tenshis_jei_addon 代码无关。
 - 最终交付：build/libs/tenshis_jei_addon-1.0.1.jar（Forge 47.4.20，含全部修正），
   建议放入真实 Forge 1.20.1 实例 mods 目录实测。
+
+## 自动合成触发（V/shift+V 拉取不足时，v1.0.2）
+- 客户端 mixin `BookmarkPullPlannerAutoCraftMixin` 注入 `BookmarkPullPlanner.plan` RETURN：
+  用 fork 公开的 `RecipeChainMath.refresh` 取完整需求，缺口 = required - available，
+  经 `CraftRequestPacket`(C2S) 发服务端。
+- 服务端 `EaepCompatImpl.autoCraft` -> EAEP 定位 + `grid.getCraftingService()`，
+  逐个 `beginCraftingCalculation` + `submitJob`。
+- 关键坑：
+  1) `simRequester` 必须返回 `grid.getPivot()`（网格节点），否则合成计算拿不到库存、
+     plan.simulation()==true 表现为"不可合成"；
+  2) 不能在主线程 job.get() 阻塞——用后台线程等结果 + server.execute(submitJob)；
+  3) 无样板物品先 `isCraftable` 跳过。
+- 日志：全部走 `TenshisJeiLog`，仅配置里 debug=true 才输出。

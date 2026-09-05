@@ -4,7 +4,7 @@ license = "MIT"
 
 [[mods]]
 modId = "tenshis_jei_addon"
-version = "1.0.1"
+version = "1.0.2"
 displayName = "Tenshi's JEI Addon"
 authors = "busyorc"
 description = '''Tenshi's JEI Addon for Forge 1.20.1 (port of the NeoForge 1.21.1 build).'''
