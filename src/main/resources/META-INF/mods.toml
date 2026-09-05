@@ -1,0 +1,55 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+license = "MIT"
+
+[[mods]]
+modId = "tenshis_jei_addon"
+version = "1.0.1"
+displayName = "Tenshi's JEI Addon"
+authors = "busyorc"
+description = '''Tenshi's JEI Addon for Forge 1.20.1 (port of the NeoForge 1.21.1 build).'''
+
+# ---- Prerequisites ----
+[[dependencies.tenshis_jei_addon]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tenshis_jei_addon]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20.1,1.21)"
+ordering = "NONE"
+side = "BOTH"
+
+# JEI unofficial fork (mod id still "jei")
+[[dependencies.tenshis_jei_addon]]
+modId = "jei"
+mandatory = true
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+# optional: tinkers shift+F trees
+[[dependencies.tenshis_jei_addon]]
+modId = "tconstruct"
+mandatory = false
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tenshis_jei_addon]]
+modId = "mantle"
+mandatory = false
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.tenshis_jei_addon]]
+modId = "curios"
+mandatory = false
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"

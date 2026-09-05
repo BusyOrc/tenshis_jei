@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'net.neoforged.moddev.legacyforge'
+}
+
+version = mod_version
+group = mod_group_id
+base { archivesName = mod_id }
+
+java { toolchain { languageVersion = JavaLanguageVersion.of(17) } }
+
+repositories {
+    mavenCentral()
+    maven { url = 'https://maven.neoforged.net/releases' }
+    maven { url = 'https://maven.parchmentmc.org' }
+    maven { url = 'https://repo.spongepowered.org/repository/maven-public/' }
+}
+
+def userJars = fileTree(rootProject.projectDir) { include('*.jar') }
+dependencies {
+    compileOnly userJars
+    compileOnly 'org.jetbrains:annotations:24.1.0'
+    annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+legacyForge {
+    version = "${minecraft_version}-${forge_version}"
+
+    parchment {
+        minecraftVersion = parchment_minecraft_version
+        mappingsVersion = parchment_mappings_version
+    }
+
+    mods {
+        create(mod_id) { sourceSet sourceSets.main }
+    }
+
+    runs {
+        configureEach {
+            gameDirectory = project.file('run')
+            systemProperty 'forge.logging.console.level', 'debug'
+        }
+        client { client() }
+        server { server() }
+    }
+
+    addModdingDependenciesTo(sourceSets.test)
+}
+
+mixin {
+    var refmap = add sourceSets.main, "tenshis_jei_addon.mixins.refmap.json"
+    jar.from refmap
+    config "tenshis_jei_addon.mixins.json"
+}
+
+jar {
+    manifest {
+        attributes([
+            'MixinConfigs': 'tenshis_jei_addon.mixins.json'
+        ])
+    }
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Xmaxerrs' << '9999'
+}

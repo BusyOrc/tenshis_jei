@@ -1,0 +1,10 @@
+# gradle
+.gradle/
+build/
+run/
+
+# user-provided dependency jars
+*.jar
+
+# logs
+*.log

@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "minVersion": "0.8",
+  "package": "com.busyorc.tenshis_jei.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "BookmarkInputHandlerTinkersShiftFMixin",
+    "BookmarkOverlayScrollStepAreaShiftMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
