@@ -4,8 +4,10 @@
   "package": "com.busyorc.tenshis_jei.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "BookmarkAutoCraftingBridgeTaskConfirmGateMixin",
     "BookmarkInputHandlerTinkersShiftFMixin",
     "BookmarkOverlayScrollStepAreaShiftMixin",
+    "IngredientBookmarkElementGenChainHotkeyMixin",
     "BookmarkPullPlannerAutoCraftMixin"
   ],
   "injectors": {

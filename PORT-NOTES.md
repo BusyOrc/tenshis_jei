@@ -48,3 +48,47 @@
   2) 不能在主线程 job.get() 阻塞——用后台线程等结果 + server.execute(submitJob)；
   3) 无样板物品先 `isCraftable` 跳过。
 - 日志：全部走 `TenshisJeiLog`，仅配置里 debug=true 才输出。
+
+## 工匠砧自动强化 —— 调研与设计（进行中）
+
+### EtST-Lib 工具 UUID（已确认，只读）
+- UUID 存在工具 ItemStack NBT 键 `"etstlib_tool_uuid"`（`CommonConstants.KEY_TOOL_UUID`）。
+- 读取：`com.c2h6s.etstlib.util.IToolUuidGetter.getUuidForItem(ItemStack)` -> Optional<UUID>（走 TOOL_UUID capability）；
+  或直接 `nbt.getString("etstlib_tool_uuid")`（无 capability 依赖的回退）。
+- 计划：加 `compat/etstlib/EtstLibCompatBridge`（ModList 判定 `etstlib`）+ `EtstLibCompatImpl`，只读 UUID。
+
+### fork 自动合成机制（已确认）
+- fork 入口：`BookmarkInputHandler.handleBookmarkAutoCrafting`（`BookmarkAutoCraftingActivator.isAutoCraftingInput` = shift + craftKey）。
+- 触发前提：鼠标悬停一个**处于合成模式的收藏组** + 当前容器 Screen。
+- 取该组 `bookmarkList.getRecipeChainInputs(groupId)` + `getCollapsedRecipeIds` -> `BookmarkAutoCraftingBridge.activate(...)`
+  -> `PacketCraftingGridCraft(containerId, multiplier, targetStacks)` -> 服务端 craft executor。
+- 服务端：`CraftingGridCraftExecutors` 里 fork 已注册 `TinkerCraftingGridCraftExecutor`（处理 `CraftingStationContainerMenu`/`TinkerStationContainerMenu`，
+  填 `craftingSlots()`=材料输入槽 + shift 点结果槽，站自身 quickMoveStack 完成合成取出强化工具）。
+- 砧 = `TinkersAnvilBlock extends TinkerStationBlock` -> `TinkerStationBlockEntity` -> `TinkerStationContainerMenu`（slot0=工具槽）。
+
+### 待确认的分歧（与用户对 UX 的表述）
+- fork 的自动合成触发是"鼠标悬停收藏组 + 合成键"，并非"砧 GUI 打开就按 shift+F"。
+- 需要确认：砧自动强化到底复用什么触发路径（a: fork 的收藏组悬停+合成键；b: 需要自定义在砧 Screen 上拦截 shift+F，
+
+## 工匠砧自动强化（shift+F）— 已实现（ANVIL 测试版）
+- 触发：打开砧 GUI（TinkerStation/CraftingStation menu）且 slot0 放带 EtST-Lib UUID 的工具时按 shift+F，
+  鼠标需悬停一个处于合成模式的收藏组（用户把要加的多个 modifier 配方**手动合并进同一个组**）。
+- 设计关键：fork 的 `TinkerCraftingGridAccess.find(TinkerStationContainerMenu)` 把 craftingSlots 取为
+  `getInputSlots()`（材料/槽位槽），**slot0 工具槽不属于 craftingSlots**；executor 只往材料槽填料再 shift 点结果槽。
+  因此链式多次 modifier 会**顺序施加到 slot0 同一把工具上**（无需每步 UUID 回槽；工具始终留在 slot0）。
+- 实现：`BookmarkInputHandlerTinkersShiftFMixin.handleAnvilShiftF` 真实分支在（uuid 非空 && 悬停合成组）时调用
+  `runAnvilGroup`，完整复刻 fork `handleBookmarkAutoCrafting` 的 `BookmarkAutoCraftingBridge.createTask(...)`
+  +`autoCraftingRunner.start(...)`（服务端路径；若 JEI 不在服务端走 createClientFallbackTask 兜底），整链交给 fork 的
+  auto-crafting runner 顺序发包执行。新 @Shadow 字段：`serverConnection` / `autoCraftingRunner` / `clientCraftingGridClickRunner`。
+- 产物：`tenshis_jei_addon-1.0.2-ANVIL.jar`。
+- 待实测确认：多 modifier 合并组在真实砧上是否逐条成功、工具是否确实留在 slot0（若离开 slot0 需再加每步 UUID 回槽 hook）。
+
+## 工匠砧自动强化 R2/R3（ANVIL3）
+- 实测发现：fork Task 每次把强化后的工具 shift 出砧结果槽进物品栏、slot0 清空；回槽点击用
+  `AbstractContainerMenu.clicked` 只改客户端、**不给服务端发包** → 服务端不同步，第二次只有材料
+  上砧、工具没回去。修复：`AnvilAutoReSlot` 改用 `MultiPlayerGameMode.handleInventoryMouseClick`
+  （真实发包）回槽。
+- 新增 `BookmarkAutoCraftingBridgeTaskConfirmGateMixin`：fork `Task.tick` 里"库存确认"
+  （`inventoryHasExpectedResultIncreaseSinceDispatch`）在砧会话激活期间改为"等工具回到 slot0"，
+  否则 fork 每步 3s 超时、且在工具回槽前 dispatch 下一个导致竞态。
+- 触发键：砧自动强化由 shift+F 改为 **shift+C**（对齐 JEI 默认 craft 键 `keyBindings.getCraftItems()`）。

@@ -40,7 +40,7 @@ public class TenshisJei {
 
         // Client-only: register the external-storage snapshot provider for bookmark pull
         // (V/shift+V in the favorites panel pulls from the wireless ME network).
-        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> TenshisJeiClient::registerClient);
+        DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> TenshisJeiClient.registerClient(modEventBus));
 
         TenshisJeiLog.info("Registered AE2 wireless bookmark pull handler for JEI (unofficial).");
     }
