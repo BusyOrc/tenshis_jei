@@ -2,6 +2,7 @@ package com.busyorc.tenshis_jei.mixin;
 
 import com.busyorc.tenshis_jei.network.WirelessSnapshotDataPayload;
 import com.busyorc.tenshis_jei.network.WirelessPayloadRegistrar;
+import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.gui.bookmarks.BookmarkIngredientKey;
 import mezz.jei.gui.bookmarks.chain.BookmarkPullPlanner;
 import mezz.jei.gui.bookmarks.chain.RecipeChainDetails;
@@ -31,7 +32,7 @@ import java.util.Set;
 @Mixin(value = BookmarkPullPlanner.class, remap = false)
 public abstract class BookmarkPullPlannerAutoCraftMixin {
 
-    @Inject(method = "plan", at = @At("RETURN"), remap = false)
+    @Inject(method = "plan", at = @At("RETURN"), remap = false, require = 0)
     private static void tenshisJei$captureShortfall(
         List<RecipeChainInput> inputs,
         Set<ResourceLocation> collapsedRecipes,
@@ -79,20 +80,19 @@ public abstract class BookmarkPullPlannerAutoCraftMixin {
         return 0L;
     }
 
-    /** 从 BookmarkIngredientKey 重建代表 ItemStack（优先 SNBT，回退到 ingredientUid 的 item id）。 */
+    /**
+     * 从 BookmarkIngredientKey 重建代表 ItemStack。
+     * 新版 JEIU 移除了 key.serializedIngredient()（BookmarkIngredientKey 现在是 record：
+     * ingredientTypeUid / ingredientUid / typedIngredient），改为优先直接取 typedIngredient()，
+     * 再回退到 ingredientUid 的 item id。
+     */
     private static ItemStack itemStackFromKey(BookmarkIngredientKey key) {
-        if (key.serializedIngredient() != null) {
-            try {
-                CompoundTag tag = NbtUtils.snbtToStructure(key.serializedIngredient());
-                net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
-                if (tag != null && minecraft.level != null) {
-                    ItemStack stack = ItemStack.parseOptional(minecraft.level.registryAccess(), tag);
-                    if (!stack.isEmpty()) {
-                        return stack;
-                    }
-                }
-            } catch (Throwable ignored) {
+        try {
+            ITypedIngredient<?> typed = key.typedIngredient();
+            if (typed != null && typed.getIngredient() instanceof ItemStack stack && !stack.isEmpty()) {
+                return stack.copy();
             }
+        } catch (Throwable ignored) {
         }
         String uid = key.ingredientUid();
         if (uid != null) {

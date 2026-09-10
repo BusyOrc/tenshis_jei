@@ -24,7 +24,7 @@ public class EtTerminalAvailableStacksProvider implements BookmarkAvailableStack
         }
         Optional<List<ItemStack>> stacks = BookmarkExternalStorageSnapshots.readEntries(menu)
                 .map(BookmarkExternalStorageSnapshots::toAvailableStacks);
-        stacks.ifPresent(list -> TenshisJeiLog.info("[ET-jei] available stacks for ET terminal ({} entries): {}", list.size(), list));
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] availableStacksProvider(ET) -> {} entries", stacks.map(List::size).orElse(-1));
         return stacks;
     }
 }

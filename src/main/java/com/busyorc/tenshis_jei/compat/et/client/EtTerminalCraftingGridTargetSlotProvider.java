@@ -37,6 +37,7 @@ public class EtTerminalCraftingGridTargetSlotProvider implements BookmarkGhostOv
             }
         }
         slots.addAll(et.getSlots(et.getCraftingGridSlotSemantic()));
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] targetSlotsProvider(ET): mode={} slots={}", et.getMode(), slots.size());
         return Optional.of(slots);
     }
 }

@@ -45,8 +45,8 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
 
             int totalCount = result.getCount() * actualTimes;
             ItemStack totalResult = result.copyWithCount(totalCount);
-            int playerRoom = getInsertableCount(player.getInventory(), totalResult);
-            long networkRoom = getNetworkRoom(menu, totalResult, totalCount - playerRoom);
+            int playerRoom = tenshiJei$insertableCount(player.getInventory(), totalResult);
+            long networkRoom = tenshiJei$networkRoom(menu, totalResult, totalCount - playerRoom);
             int maxTimes = (int) Math.min(actualTimes, (playerRoom + networkRoom) / result.getCount());
             if (maxTimes <= 0) {
                 return 0;
@@ -54,7 +54,7 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
             actualTimes = maxTimes;
             totalCount = result.getCount() * actualTimes;
             totalResult = result.copyWithCount(totalCount);
-            playerRoom = getInsertableCount(player.getInventory(), totalResult);
+            playerRoom = tenshiJei$insertableCount(player.getInventory(), totalResult);
             int remainderCount = totalCount - playerRoom;
 
             List<ItemStack> consumed = new ArrayList<>(grid.size());
@@ -65,16 +65,16 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
                 }
                 ItemStack extracted = grid.extractItem(i, actualTimes, false);
                 if (extracted.getCount() < actualTimes) {
-                    restoreConsumed(grid, consumed);
+                    tenshiJei$restoreConsumed(grid, consumed);
                     return 0;
                 }
                 consumed.add(extracted);
             }
 
             if (remainderCount > 0) {
-                long inserted = insertIntoNetwork(menu, totalResult.copyWithCount(remainderCount), remainderCount);
+                long inserted = tenshiJei$insertIntoNetwork(menu, totalResult.copyWithCount(remainderCount), remainderCount);
                 if (inserted < remainderCount) {
-                    restoreConsumed(grid, consumed);
+                    tenshiJei$restoreConsumed(grid, consumed);
                     return 0;
                 }
             }
@@ -90,7 +90,7 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
         }
     }
 
-    private static long getNetworkRoom(AbstractContainerMenu menu, ItemStack totalResult, int requested) {
+    private static long tenshiJei$networkRoom(AbstractContainerMenu menu, ItemStack totalResult, int requested) {
         if (requested <= 0 || !(menu instanceof MEStorageMenu storageMenu) || !storageMenu.getLinkStatus().connected()) {
             return 0;
         }
@@ -99,7 +99,7 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
         return storage.insert(AEItemKey.of(totalResult), requested, Actionable.SIMULATE, source);
     }
 
-    private static long insertIntoNetwork(AbstractContainerMenu menu, ItemStack remainder, int amount) {
+    private static long tenshiJei$insertIntoNetwork(AbstractContainerMenu menu, ItemStack remainder, int amount) {
         if (!(menu instanceof MEStorageMenu storageMenu) || !storageMenu.getLinkStatus().connected()) {
             return 0;
         }
@@ -108,7 +108,7 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
         return storage.insert(AEItemKey.of(remainder), amount, Actionable.MODULATE, source);
     }
 
-    private static void restoreConsumed(InternalInventory grid, List<ItemStack> consumed) {
+    private static void tenshiJei$restoreConsumed(InternalInventory grid, List<ItemStack> consumed) {
         for (int i = 0; i < consumed.size(); i++) {
             ItemStack stack = consumed.get(i);
             if (!stack.isEmpty()) {
@@ -117,7 +117,7 @@ public abstract class CraftingTermSlotBatchMixin implements TenshiJeiCraftingTer
         }
     }
 
-    private static int getInsertableCount(Inventory inventory, ItemStack stack) {
+    private static int tenshiJei$insertableCount(Inventory inventory, ItemStack stack) {
         int remaining = stack.getCount();
         for (ItemStack slotStack : inventory.items) {
             if (remaining <= 0) {

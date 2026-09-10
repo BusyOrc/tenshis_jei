@@ -64,7 +64,8 @@ public class EtTerminalCraftingGridCraftExecutor implements ICraftingGridCraftEx
             }
             return 0;
         }
-        TenshisJeiLog.info("[ET-jei] craft request: multiplier={}, targets={}, recipeId={}", multiplier, targetStacks.size(), recipeId);
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] craft request: multiplier={}, targets={}, recipeId={}, mode={}",
+                multiplier, targetStacks.size(), recipeId, etMenu.getMode());
 
         if (recipeId != null) {
             var holder = player.level().getRecipeManager().byKey(recipeId).orElse(null);

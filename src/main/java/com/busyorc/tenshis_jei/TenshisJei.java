@@ -2,7 +2,9 @@ package com.busyorc.tenshis_jei;
 
 import com.busyorc.tenshis_jei.compat.ae2.WirelessBookmarkPullTransferHandler;
 import com.busyorc.tenshis_jei.compat.et.EtTerminalCraftingGridCraftExecutor;
+import com.busyorc.tenshis_jei.compat.et.EtTerminalCraftingGridFillExecutor;
 import mezz.jei.common.bookmarks.CraftingGridCraftExecutors;
+import mezz.jei.common.bookmarks.CraftingGridFillExecutors;
 import mezz.jei.common.bookmarks.ServerBookmarkPullTransfers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -22,13 +24,18 @@ public class TenshisJei {
 
     public static final String MOD_ID = "tenshis_jei_addon";
     public static final String MOD_NAME = "Tenshi's JEI Addon";
-    public static final String VERSION = "1.0.2";
+    public static final String VERSION = "1.0.3";
 
     public TenshisJei(IEventBus modEventBus, ModContainer modContainer) {
         // Config file: config/tenshis_jei_addon.toml (debug switch, default off; filename = mod id).
         modContainer.registerConfig(ModConfig.Type.COMMON, TenshisJeiConfig.SPEC, TenshisJei.MOD_ID + ".toml");
         // 注册"在 ET 终端内按配方树自动合成"的服务端执行器到 JEI fork 的注册表。
         CraftingGridCraftExecutors.registerExecutor(new EtTerminalCraftingGridCraftExecutor());
+        // 注册"把配方材料填进 ET 终端格子"（幽灵覆盖层/点击填充）的 fill 执行器：
+        // 新版 JEIU 将该动作拆成 PacketFillCraftingGrid -> CraftingGridFillExecutors，
+        // 未注册时 ET 终端不响应。
+        CraftingGridFillExecutors.registerExecutor(new EtTerminalCraftingGridFillExecutor());
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] registered ET terminal executors: craft + fill");
         // V/shift+V 拉取配方树物品时，若有 AE2 无线终端在身（背包或 Curios 饰品槽），
         // 可不打开 ME 终端直接从网络拉取。
         ServerBookmarkPullTransfers.registerHandler(new WirelessBookmarkPullTransferHandler());

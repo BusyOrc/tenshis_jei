@@ -21,5 +21,6 @@ public final class EtJeiClientCompat {
     public static void onClientSetup(FMLClientSetupEvent event) {
         BookmarkAvailableStacksProviders.registerProvider(new EtTerminalAvailableStacksProvider());
         BookmarkGhostOverlayTargetSlots.registerProvider(new EtTerminalCraftingGridTargetSlotProvider());
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] registered ET client providers: availableStacks + targetSlots");
     }
 }
