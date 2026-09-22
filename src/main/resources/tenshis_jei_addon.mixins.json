@@ -6,6 +6,8 @@
   "mixins": [
     "CraftingTermSlotBatchMixin",
     "BookmarkAutoCraftingBridgeExactCraftingMixin",
+    "BookmarkAutoCraftingCraftDiagnosticsMixin",
+    "BookmarkAutoCraftingBridgeEtPanelRecipesMixin",
     "BookmarkAutoCraftingTaskDispatchExactMixin",
     "RecipeChainMathInputLogMixin",
     "BookmarkInputHandlerTinkersShiftFMixin",

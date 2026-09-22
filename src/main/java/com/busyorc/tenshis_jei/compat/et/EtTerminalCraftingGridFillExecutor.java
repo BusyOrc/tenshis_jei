@@ -37,7 +37,7 @@ public class EtTerminalCraftingGridFillExecutor implements ICraftingGridFillExec
         if (!(menu instanceof ETTerminalMenu etMenu) || menu.containerId != containerId || targetStacks.isEmpty()) {
             return 0;
         }
-        List<Slot> slots = resolveTargetSlots(etMenu, targetStacks);
+        List<Slot> slots = resolveTargetSlots(etMenu);
         if (slots.isEmpty()) {
             TenshisJeiLog.info("[ET-jei] fill: no target slots for mode {}", etMenu.getMode());
             return 0;
@@ -68,31 +68,23 @@ public class EtTerminalCraftingGridFillExecutor implements ICraftingGridFillExec
     }
 
     /**
-     * 按当前模式与配方输入数量选择目标格：锻造台(3 输入)/切石机(1 输入)用面板槽，
-     * 其余（含工作台 3x3）用终端的合成网格槽。
+     * 只按当前模式选目标格（不再依赖 targetStacks 长度）：
+     * 锻造台 -> 模板/基底/添加三槽；切石机 -> 输入槽；其余（含工作台 3x3）-> 合成网格槽。
+     * 客户端现在按 JEIU 只支持 4/9 的限制返回 9 个目标槽，长度已不能用来判断面板类型。
      */
-    private static List<Slot> resolveTargetSlots(ETTerminalMenu et, List<ItemStack> targetStacks) {
-        int inputCount = 0;
-        for (ItemStack stack : targetStacks) {
-            if (!stack.isEmpty()) {
-                inputCount++;
-            }
-        }
+    private static List<Slot> resolveTargetSlots(ETTerminalMenu et) {
         List<Slot> slots = new ArrayList<>();
-        if (et.getMode() == ETTerminalMode.SMITHING && targetStacks.size() >= 3) {
-            slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_TEMPLATE));
-            slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_BASE));
-            slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_ADDITION));
-            return slots;
+        switch (et.getMode()) {
+            case SMITHING -> {
+                slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_TEMPLATE));
+                slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_BASE));
+                slots.addAll(et.getSlots(ETSlotSemantics.SMITHING_TABLE_ADDITION));
+            }
+            case STONECUTTING -> slots.addAll(et.getSlots(ETSlotSemantics.STONECUTTING_INPUT));
+            default -> slots.addAll(et.getSlots(et.getCraftingGridSlotSemantic()));
         }
-        if (et.getMode() == ETTerminalMode.STONECUTTING && targetStacks.size() <= 1) {
-            slots.addAll(et.getSlots(ETSlotSemantics.STONECUTTING_INPUT));
-            return slots;
-        }
-        slots.addAll(et.getSlots(et.getCraftingGridSlotSemantic()));
-        if (slots.isEmpty() && inputCount == 1) {
-            // 兜底：网格不可用时用切石机输入槽
-            slots.addAll(et.getSlots(ETSlotSemantics.STONECUTTING_INPUT));
+        if (slots.isEmpty()) {
+            slots.addAll(et.getSlots(et.getCraftingGridSlotSemantic()));
         }
         return slots;
     }

@@ -58,10 +58,14 @@ public class EtTerminalCraftingGridCraftExecutor implements ICraftingGridCraftEx
     public int craft(ServerPlayer player, int containerId, @Nullable ResourceLocation recipeId,
                      List<ItemStack> targetStacks, int multiplier) {
         AbstractContainerMenu menu = player.containerMenu;
+        // 常开日志：任何一次进入（含被 guard 拦下）都可见，便于判断"包是否到达服务端执行器"
+        com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] craft executor entered: packet.containerId={} menu={} menu.containerId={} targets={} recipeId={}",
+                containerId, menu == null ? "null" : menu.getClass().getSimpleName(),
+                menu == null ? -1 : menu.containerId, targetStacks.size(), recipeId);
         if (!(menu instanceof ETTerminalMenu etMenu) || menu.containerId != containerId || targetStacks.isEmpty()) {
-            if (menu instanceof ETTerminalMenu etm) {
-                TenshisJeiLog.info("[ET-jei] craft ignored: packet containerId {} vs menu containerId {}", containerId, etm.containerId);
-            }
+            com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] craft ignored: packet.containerId={} vs menu.containerId={} (etMenu={}, targetsEmpty={})",
+                    containerId, menu instanceof ETTerminalMenu etm2 ? etm2.containerId : -1,
+                    menu instanceof ETTerminalMenu, targetStacks.isEmpty());
             return 0;
         }
         com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] craft request: multiplier={}, targets={}, recipeId={}, mode={}",

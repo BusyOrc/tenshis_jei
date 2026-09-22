@@ -59,10 +59,13 @@ public abstract class BookmarkInputHandlerTinkersShiftFMixin {
         IInternalKeyMappings keyBindings,
         CallbackInfoReturnable<Optional<IUserInputHandler>> cir
     ) {
+        // 注意：JEIU 19.54 移除了 IJeiKeyMapping.matchesIgnoringModifiers(...)（19.53 还是 default 方法），
+        // 继续调用会在运行期抛 NoSuchMethodError。这里改用 fork 自身通行的 input.is(keyMapping)
+        // （内部为 IJeiKeyMapping.isActiveAndMatches，新旧版本都存在），修饰键仍由上面的 hasShift 等显式判定。
         boolean isShiftF = InputModifiers.hasShift(input.getModifiers())
             && !InputModifiers.hasControl(input.getModifiers())
             && !InputModifiers.hasAlt(input.getModifiers())
-            && keyBindings.getFavoriteRecipe().matchesIgnoringModifiers(input.getKey());
+            && input.is(keyBindings.getFavoriteRecipe());
         if (!isShiftF) {
             return;
         }

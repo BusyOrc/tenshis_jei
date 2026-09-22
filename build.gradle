@@ -44,7 +44,7 @@ dependencies {
     //  - ExtendedTerminal：ETTerminalMenu / ETMenuType 等终端 API
     //  - Applied Energistics 2：CraftingTermSlot / MEStorageMenu 基类与 appeng 网络 API
     compileOnly files(
-        'run/mods/JEIunofficial-1.21.1-neoforge-19.53.0.426.jar',
+        'run/mods/JEIunofficial-1.21.1-neoforge-19.54.0.427.jar',
         'run/mods/ExtendedTerminal-1.21.1-19.1.0.jar',
         'run/mods/appliedenergistics2-19.2.17.jar',
         // 可选前置：匠魂 3 移植版 + Mantle（运行期缺省时本模组功能自动降级）
