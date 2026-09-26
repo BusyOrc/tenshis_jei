@@ -42,6 +42,16 @@ public class BookmarkAutoCraftingBridgeExactCraftingMixin {
             return AutoCraftingManager.run(math, initialItems, inventory, executor, interrupted);
         }
         TenshisJeiLog.info("[ET-jei] tree craft EXACT (one-shot): empties inventory snapshot");
-        return AutoCraftingManager.run(math, initialItems, List::of, executor, interrupted);
+        boolean terminal = TenshisJeiCraftingModes.isSupportedTerminalMenuOpen();
+        if (terminal) {
+            TenshisJeiCraftingModes.setTerminalFillWindow(true);
+        }
+        try {
+            return AutoCraftingManager.run(math, initialItems, List::of, executor, interrupted);
+        } finally {
+            if (terminal) {
+                TenshisJeiCraftingModes.setTerminalFillWindow(false);
+            }
+        }
     }
 }

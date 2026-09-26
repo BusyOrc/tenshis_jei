@@ -43,6 +43,15 @@ ordering = "NONE"
 side = "BOTH"
 
 
+# WCWT (AE2 Wireless Comprehensive Work Terminal): optional — its terminal has a manual
+# smithing-table workspace; enabling the same bookmark/recipe-tree auto-craft support as ET.
+[[dependencies.tenshis_jei_addon]]
+modId = "wcwt"
+type = "optional"
+versionRange = "[1,)"
+ordering = "NONE"
+side = "BOTH"
+
 # Tinkers' Construct (fork by zhuchuovo): optional — powers the bookmark shift+F modifier-recipe feature
 [[dependencies.tenshis_jei_addon]]
 modId = "tconstruct"

@@ -7,6 +7,7 @@ import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.gui.IRecipeLayoutDrawable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -66,17 +67,25 @@ public abstract class BookmarkAutoCraftingBridgeEtPanelRecipesMixin {
                 return original;
             }
             Minecraft minecraft = Minecraft.getInstance();
-            if (minecraft.player == null || minecraft.level == null
-                || !(minecraft.player.containerMenu instanceof ETTerminalMenu)) {
+            if (minecraft.player == null || minecraft.level == null) {
                 return original;
             }
-            // 该配方在服务端的真实类型必须是本模组 ET 执行器支持的切石/锻造
+            AbstractContainerMenu menu = minecraft.player.containerMenu;
+            boolean etTerminal = menu instanceof ETTerminalMenu;
+            boolean wcwtTerminal = isWcwtTerminal(menu);
+            if (!etTerminal && !wcwtTerminal) {
+                return original;
+            }
+            // 该配方在服务端的真实类型必须是我们对应终端执行器支持的类型：
+            // ET 终端：切石 + 锻造；WCWT 终端：只有锻造（该终端没有手动切石面板）
             RecipeHolder<?> holder = minecraft.level.getRecipeManager().byKey(recipeUid).orElse(null);
             if (holder == null) {
                 return original;
             }
             RecipeType<?> type = holder.value().getType();
-            if (type != RecipeType.STONECUTTING && type != RecipeType.SMITHING) {
+            boolean supported = type == RecipeType.SMITHING
+                || (type == RecipeType.STONECUTTING && etTerminal);
+            if (!supported) {
                 return original;
             }
             IRecipeLayoutDrawable<?> layout = recipeLayoutResolver.apply(recipeUid).orElse(null);
@@ -84,12 +93,36 @@ public abstract class BookmarkAutoCraftingBridgeEtPanelRecipesMixin {
                 return original;
             }
             ResourceLocation categoryUid = layout.getRecipeCategory().getRecipeType().getUid();
-            EtLog.info("[ET-jei] 放宽 JEIU 守卫: 在 ET 终端内放行 {} (serverType={}, jeiCategory={})",
-                recipeUid, type, categoryUid);
+            EtLog.info("[ET-jei] 放宽 JEIU 守卫: 在 {} 终端内放行 {} (serverType={}, jeiCategory={})",
+                etTerminal ? "ET" : "WCWT", recipeUid, type, categoryUid);
             return categoryUid; // 使 fork 的 "CRAFTING.equals(...)" 比较成立，从而放行发包
         } catch (Throwable t) {
             EtLog.info("[ET-jei] 放宽守卫时异常，保持原行为: " + t);
             return original;
         }
+    }
+
+    /**
+     * 用类名遍历判断是否为 WCWT 终端菜单——**不直接引用 WCWT 类**，
+     * 这样 WCWT 未安装时也不会因类加载失败而影响本 mixin。
+     */
+    private static boolean isWcwtTerminal(Object menu) {
+        if (menu == null) {
+            return false;
+        }
+        try {
+            if (!net.neoforged.fml.ModList.get().isLoaded("wcwt")) {
+                return false;
+            }
+        } catch (Throwable t) {
+            return false;
+        }
+        String target = "com.lhy.wcwt.menu.WirelessComprehensiveWorkTerminalMenu";
+        for (Class<?> c = menu.getClass(); c != null; c = c.getSuperclass()) {
+            if (target.equals(c.getName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

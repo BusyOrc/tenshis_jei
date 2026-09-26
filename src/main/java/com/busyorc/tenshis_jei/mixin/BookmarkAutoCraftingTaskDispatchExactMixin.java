@@ -75,7 +75,7 @@ public class BookmarkAutoCraftingTaskDispatchExactMixin {
             BooleanSupplier interrupted
     ) {
         if (!TenshisJeiCraftingModes.isExactTreeQuantityEnabled()) {
-            return AutoCraftingManager.run(math, initialItems, inventory, executor, interrupted);
+            return tenshisJei$runWithTerminalQuantity(math, initialItems, inventory, executor, interrupted);
         }
         boolean isFirstDispatch = !tenshisJei$firstDispatchDone;
         Supplier<List<RecipeChainInput>> effectiveInventory = isFirstDispatch ? List::of : inventory;
@@ -137,8 +137,34 @@ public class BookmarkAutoCraftingTaskDispatchExactMixin {
                 return executor.craft(recipeUid, target);
             };
         }
-        AutoCraftingManager.Result result = AutoCraftingManager.run(math, initialItems, effectiveInventory, effectiveExecutor, interrupted);
+        AutoCraftingManager.Result result =
+            tenshisJei$runWithTerminalQuantity(math, initialItems, effectiveInventory, effectiveExecutor, interrupted);
         tenshisJei$firstDispatchDone = true;
         return result;
+    }
+
+    /**
+     * 调用 JEIU 的 chain math，并在"当前打开的是本模组终端（ET/WCWT）"时开一个窗口，
+     * 让 BookmarkCraftingGridFill 的数量封顶改为按材料可用量计算（锻造台这类不可堆叠材料
+     * 否则会被 JEIU 按"槽位容量=1"压成每轮 1 个）。
+     */
+    private static AutoCraftingManager.Result tenshisJei$runWithTerminalQuantity(
+            RecipeChainMath math,
+            List<RecipeChainInput> initialItems,
+            Supplier<List<RecipeChainInput>> inventory,
+            AutoCraftingManager.RecipeExecutor executor,
+            BooleanSupplier interrupted
+    ) {
+        boolean terminal = TenshisJeiCraftingModes.isSupportedTerminalMenuOpen();
+        if (terminal) {
+            TenshisJeiCraftingModes.setTerminalFillWindow(true);
+        }
+        try {
+            return AutoCraftingManager.run(math, initialItems, inventory, executor, interrupted);
+        } finally {
+            if (terminal) {
+                TenshisJeiCraftingModes.setTerminalFillWindow(false);
+            }
+        }
     }
 }

@@ -22,5 +22,7 @@ public final class EtJeiClientCompat {
         BookmarkAvailableStacksProviders.registerProvider(new EtTerminalAvailableStacksProvider());
         BookmarkGhostOverlayTargetSlots.registerProvider(new EtTerminalCraftingGridTargetSlotProvider());
         com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] registered ET client providers: availableStacks + targetSlots");
+        // WCWT（可选前置）：注册其终端的目标槽位 provider
+        com.busyorc.tenshis_jei.compat.wcwt.WcwtCompat.registerClient();
     }
 }

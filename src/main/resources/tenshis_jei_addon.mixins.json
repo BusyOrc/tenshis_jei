@@ -8,8 +8,11 @@
     "BookmarkAutoCraftingBridgeExactCraftingMixin",
     "BookmarkAutoCraftingCraftDiagnosticsMixin",
     "BookmarkAutoCraftingBridgeEtPanelRecipesMixin",
+    "Ae2CraftingGridCraftExecutorWcwtSkipMixin",
     "BookmarkAutoCraftingTaskDispatchExactMixin",
     "RecipeChainMathInputLogMixin",
+    "BookmarkCraftingGridFillTerminalQuantityMixin",
+    "IngredientTagSelectionTooltipSelfRenderMixin",
     "BookmarkInputHandlerTinkersShiftFMixin",
     "BookmarkPullPlannerAutoCraftMixin"
   ],

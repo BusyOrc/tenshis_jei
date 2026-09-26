@@ -36,6 +36,8 @@ public class TenshisJei {
         // 未注册时 ET 终端不响应。
         CraftingGridFillExecutors.registerExecutor(new EtTerminalCraftingGridFillExecutor());
         com.busyorc.tenshis_jei.compat.et.EtLog.info("[ET-jei] registered ET terminal executors: craft + fill");
+        // WCWT（无线综合工作终端，可选前置）：注册其终端的 craft / fill 执行器
+        com.busyorc.tenshis_jei.compat.wcwt.WcwtCompat.registerServer();
         // V/shift+V 拉取配方树物品时，若有 AE2 无线终端在身（背包或 Curios 饰品槽），
         // 可不打开 ME 终端直接从网络拉取。
         ServerBookmarkPullTransfers.registerHandler(new WirelessBookmarkPullTransferHandler());

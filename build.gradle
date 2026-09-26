@@ -46,6 +46,8 @@ dependencies {
     compileOnly files(
         'run/mods/JEIunofficial-1.21.1-neoforge-19.54.0.427.jar',
         'run/mods/ExtendedTerminal-1.21.1-19.1.0.jar',
+        // 可选前置：AE2 无线综合工作终端（WCWT），提供锻造台/工作台面板
+        'run/mods/wcwt-1.3.9.jar',
         'run/mods/appliedenergistics2-19.2.17.jar',
         // 可选前置：匠魂 3 移植版 + Mantle（运行期缺省时本模组功能自动降级）
         'run/mods/TinkersConstruct-1.21.1-3.12.7.jar',
